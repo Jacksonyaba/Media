@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Media Personality | Official Website</title>
+
+  <meta name="description" content="Official website of a professional media personality for hosting, MC, voice over and ads.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+
+  {% load static %}
+<link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXX');
+</script>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      backgroundImage: {
+        'mobile-bg': "url('{% static "images/bg-mobile.webp" %}')",
+        'desktop-bg': "url('{% static "images/background.webp" %}')",
+      }
+    }
+  }
+}
+</script>
+
+
+</head>
+
+<body
+  class="bg-mobile-bg md:bg-desktop-bg bg-cover bg-center bg-fixed text-gray-900"
+  style="background-image: url('{% static "images/tuta.jpg" %}');"
+>
+
+<div class="fixed inset-0 bg-black/40 -z-10"></div>
+
+<!-- NAV -->
+<nav class="fixed w-full bg-white/90 backdrop-blur shadow z-50">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+    <h1 class="font-bold text-xl">MediaBrand</h1>
+
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex space-x-6">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#contact">Contact</a>
+    </div>
+
+    <!-- Hamburger -->
+    <button id="menu-btn" class="md:hidden focus:outline-none">
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur">
+    <a href="#home" onclick="menu.classList.add('hidden')" class="block px-6 py-3">Home</a>
+    <a href="#about" onclick="menu.classList.add('hidden')" class="block px-6 py-3">About</a>
+    <a href="#services" onclick="menu.classList.add('hidden')" class="block px-6 py-3">Services</a>
+    <a href="#gallery" onclick="menu.classList.add('hidden')" class="block px-6 py-3">Gallery</a>
+    <a href="#contact" onclick="menu.classList.add('hidden')" class="block px-6 py-3">Contact</a>
+  </div>
+</nav>
+
+
+<!-- HERO -->
+<section id="home" class="h-screen flex items-center justify-center">
+  <div class="absolute inset-0 bg-black/60"></div>
+
+  <div class="relative text-center text-white z-10">
+    <h2 class="text-4xl font-bold mb-4">Professional Media Personality</h2>
+    <p class="mb-6">Hosting | MC | Voice Over | Ads</p>
+    <a href="#contact" class="bg-white text-black px-6 py-3 rounded">Book Now</a>
+  </div>
+</section>
+
+
+<!-- ABOUT -->
+<section id="about" class="max-w-6xl mx-auto px-6 py-20">
+  <h3 class="text-3xl font-bold mb-6">About</h3>
+  <p>{{ about.content }}</p>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="py-20">
+  <div class="bg-white/90 backdrop-blur rounded-lg max-w-6xl mx-auto px-6 py-10">
+    <h3 class="text-3xl font-bold mb-10">Services</h3>
+    <div class="grid md:grid-cols-3 gap-6">
+      {% for service in services %}
+      <div class="border p-6 rounded shadow-sm">
+        <h4 class="font-bold mb-2">{{ service.name }}</h4>
+        <p>{{ service.description }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" class="py-20">
+  <div class="max-w-6xl mx-auto px-6">
+    <h3 class="text-3xl font-bold mb-10 text-center">Gallery</h3>
+
+    <!-- Slider Wrapper -->
+    <div class="relative overflow-hidden">
+
+      <!-- Slides -->
+      <div
+        id="slider"
+        class="flex transition-transform duration-300 ease-out touch-pan-y"
+      >
+        {% for item in gallery %}
+        <div class="min-w-full flex justify-center">
+          <img
+            src="{{ item.image.url }}"
+            alt="{{ item.title }}"
+            loading="lazy"
+            decoding="async"
+            class="rounded-lg shadow-lg max-h-[70vh] object-contain"
+          />
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Controls (Desktop) -->
+      <button id="prev"
+        class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 text-white p-3 rounded-full">
+        ‹
+      </button>
+
+      <button id="next"
+        class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 text-white p-3 rounded-full">
+        ›
+      </button>
+
+    </div>
+
+    <!-- Indicators -->
+    <div id="dots" class="flex justify-center gap-2 mt-6"></div>
+  </div>
+</section>
+
+
+<!-- CONTACT / BOOKING -->
+<section id="contact" class="py-20">
+  <div class="max-w-xl mx-auto px-6">
+    <h3 class="text-3xl font-bold mb-6">Book a Service</h3>
+
+    <form method="POST" action="{% url 'send_booking' %}" class="space-y-4">
+      {% csrf_token %}
+      <input name="name" required placeholder="Name" class="w-full border p-3">
+      <input name="email" type="email" required placeholder="Email" class="w-full border p-3">
+
+      <input name="phone" type="phone" required placeholder="Phone Number" class="w-full border p-3">
+
+      <select name="service" class="w-full border p-3">
+        <option value="hosting">Event Hosting</option>
+        <option value="mc">MC</option>
+        <option value="ads">Advertisements</option>
+        <option value="voice">Voice Over</option>
+      </select>
+
+      <textarea name="message" placeholder="Message" class="w-full border p-3"></textarea>
+      <button class="bg-black text-white px-6 py-3 w-full">Send</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-black text-white text-center py-6">
+  © {{ year }} MediaBrand. All rights reserved.
+</footer>
+
+<script>
+  const btn = document.getElementById('menu-btn');
+  const menu = document.getElementById('mobile-menu');
+
+  btn.addEventListener('click', () => {
+    menu.classList.toggle('hidden');
+  });
+</script>
+
+<script>
+  const slider = document.getElementById("slider");
+  const slides = slider.children;
+  const dotsContainer = document.getElementById("dots");
+
+  let index = 0;
+  let startX = 0;
+  let currentTranslate = 0;
+
+  // Create dots
+  for (let i = 0; i < slides.length; i++) {
+    const dot = document.createElement("button");
+    dot.className = "w-3 h-3 rounded-full bg-gray-400";
+    dot.onclick = () => goToSlide(i);
+    dotsContainer.appendChild(dot);
+  }
+
+  function updateDots() {
+    [...dotsContainer.children].forEach((dot, i) => {
+      dot.classList.toggle("bg-black", i === index);
+      dot.classList.toggle("bg-gray-400", i !== index);
+    });
+  }
+
+  function goToSlide(i) {
+    index = Math.max(0, Math.min(i, slides.length - 1));
+    currentTranslate = -index * window.innerWidth;
+    slider.style.transform = `translateX(${currentTranslate}px)`;
+    updateDots();
+  }
+
+  document.getElementById("next").onclick = () => goToSlide(index + 1);
+  document.getElementById("prev").onclick = () => goToSlide(index - 1);
+
+  // Touch events
+  slider.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+  });
+
+  slider.addEventListener("touchend", e => {
+    const endX = e.changedTouches[0].clientX;
+    const diff = startX - endX;
+
+    if (diff > 50) goToSlide(index + 1);
+    if (diff < -50) goToSlide(index - 1);
+  });
+
+  window.addEventListener("resize", () => goToSlide(index));
+
+  updateDots();
+</script>
+
+
+</body>
+</html>
